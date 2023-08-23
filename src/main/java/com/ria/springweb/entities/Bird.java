@@ -1,18 +1,12 @@
 package com.ria.springweb.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import java.util.ArrayList;
 
-@Entity
 public class Bird {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
     private String family;
-    private String[] continents;
+    private ArrayList<String> continents = new ArrayList<>();
     private String added;
     private boolean visible;
 
@@ -40,14 +34,13 @@ public class Bird {
         this.family = family;
     }
 
-    public String[] getContinents() {
+    public ArrayList<String> getContinents() {
         return continents;
     }
 
-    public void setContinents(String[] continents) {
+    public void setContinents(ArrayList<String> continents) {
         this.continents = continents;
     }
-
     public String getAdded() {
         return added;
     }
@@ -61,6 +54,15 @@ public class Bird {
     }
 
     public void setVisible(boolean visible) {
+        this.visible = visible;
+    }
+
+    public Bird(int id, String name, String family, ArrayList<String> continents, String added, boolean visible) {
+        this.id = id;
+        this.name = name;
+        this.family = family;
+        this.continents=continents;
+        this.added = added;
         this.visible = visible;
     }
 }
