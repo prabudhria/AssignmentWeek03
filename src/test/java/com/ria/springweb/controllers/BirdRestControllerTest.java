@@ -4,8 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.ria.springweb.entities.Bird;
 import com.ria.springweb.service.BirdService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.stubbing.OngoingStubbing;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -39,40 +41,39 @@ class BirdRestControllerTest {
     @MockBean
     private BirdService birdService;
 
+    Bird samplebird;
+    @BeforeEach
+    public void initialiser(){
+        samplebird = new Bird(ID, BIRDNAME, BIRDFAMILY, CONTINENTS, BIRDADDED, BIRDVISIBLE);
+    }
+
     @Test
     public void testgetBirds() throws Exception {
-        Bird samplebird = new Bird(ID, BIRDNAME, BIRDFAMILY, CONTINENTS, BIRDADDED, BIRDVISIBLE);
-        List<Bird> birdslist = List.of(samplebird);
+        List<Bird> birdslist = new ArrayList<>(); birdslist.add(samplebird);
         when(birdService.getBirds()).thenReturn(birdslist);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/birds")).andExpect(MockMvcResultMatchers.status().isOk());
-
-//        ObjectWriter objectWriter = new ObjectMapper().writer().withDefaultPrettyPrinter();
-//        mockMvc.perform(MockMvcRequestBuilders.get("/birds")).andExpect(MockMvcResultMatchers.content().json("[{'id':something, name: 'albatross', 'family': 'albatrossfamily', 'added': 'addedatthistime', 'visible': true}]"));
-//        mockMvc.perform(MockMvcRequestBuilders.get("/birds")).andExpect(MockMvcResultMatchers.content().json(objectWriter.writeValueAsString(birdslist)));
     }
 
     @Test
     public void testaddBird() throws Exception {
-        Bird samplebird = new Bird(ID, BIRDNAME, BIRDFAMILY, CONTINENTS, BIRDADDED, BIRDVISIBLE);
         when(birdService.addBird(any())).thenReturn(samplebird);
 
         ObjectWriter objectWriter = new ObjectMapper().writer().withDefaultPrettyPrinter();
-        mockMvc.perform(MockMvcRequestBuilders.post("/birds").contentType(MediaType.APPLICATION_JSON).content(objectWriter.writeValueAsString(samplebird))).andExpect(MockMvcResultMatchers.status().isOk());
+        mockMvc.perform(MockMvcRequestBuilders.post("/birds").contentType(MediaType.APPLICATION_JSON).content(objectWriter.writeValueAsString(samplebird))).andExpect(MockMvcResultMatchers.status().isCreated());
     }
 
     @Test
     public void testupdateBird() throws Exception {
-        Bird samplebird = new Bird(ID, BIRDNAME, BIRDFAMILY, CONTINENTS, BIRDADDED, BIRDVISIBLE);
         samplebird.setName("sparrow");
         when(birdService.addBird(any())).thenReturn(samplebird);
         ObjectWriter objectWriter = new ObjectMapper().writer().withDefaultPrettyPrinter();
-        mockMvc.perform(MockMvcRequestBuilders.put("/birds").contentType(MediaType.APPLICATION_JSON).content(objectWriter.writeValueAsString(samplebird))).andExpect(MockMvcResultMatchers.status().isOk());
+        mockMvc.perform(MockMvcRequestBuilders.put("/birds").contentType(MediaType.APPLICATION_JSON).content(objectWriter.writeValueAsString(samplebird))).andExpect(MockMvcResultMatchers.status().isCreated());
     }
 
     @Test
     public void testdeleteBird() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.delete("/birds/{ID}", 1)).andExpect(MockMvcResultMatchers.status().isOk());
+        mockMvc.perform(MockMvcRequestBuilders.delete("/birds/{ID}", 1)).andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
 }

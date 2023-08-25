@@ -1,9 +1,15 @@
 package com.ria.springweb.entities;
 
+
+import jakarta.annotation.Nonnull;
+import jakarta.validation.constraints.NotNull;
+import org.springframework.lang.NonNull;
+
 import java.util.ArrayList;
 
 public class Bird {
     private int id;
+    @NotNull
     private String name;
     private String family;
     private ArrayList<String> continents = new ArrayList<>();
@@ -18,11 +24,12 @@ public class Bird {
         this.id = id;
     }
 
+
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName( String name) {
         this.name = name;
     }
 
@@ -49,13 +56,15 @@ public class Bird {
         this.added = added;
     }
 
-    public boolean isVisible() {
+    public Boolean isVisible() {
         return visible;
     }
 
     public void setVisible(boolean visible) {
         this.visible = visible;
     }
+
+    public Bird(){}
 
     public Bird(int id, String name, String family, ArrayList<String> continents, String added, boolean visible) {
         this.id = id;
